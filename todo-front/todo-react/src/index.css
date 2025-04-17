@@ -1,0 +1,31 @@
+/* index.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: white;
+  color: #000;
+}
+
+.App {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+  background-color: white;
+  min-height: 100vh;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+input, textarea {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}

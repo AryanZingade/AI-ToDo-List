@@ -1,0 +1,16 @@
+[
+  {
+    "id": 2,
+    "title": "Complete Homework",
+    "description": "Finish all assigned homework tasks.",
+    "importance": "high",
+    "completed": false
+  },
+  {
+    "id": 3,
+    "title": "Buy Milk",
+    "description": "Purchase milk for the house.",
+    "importance": "medium",
+    "completed": false
+  }
+]
