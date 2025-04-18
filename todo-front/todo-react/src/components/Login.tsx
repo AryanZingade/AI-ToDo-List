@@ -7,29 +7,41 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:8000/tasks/login", {
+    console.log("Sending login with:", username, password);
+    const response = await fetch("http://localhost:8000/tasks/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
     });
 
-    if (res.ok) {
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", username);
       navigate("/dashboard");
     } else {
-      alert("Invalid credentials");
+      alert("Login failed.");
     }
   };
 
   return (
-    <div>
+    <div className="login">
       <h2>Login</h2>
       <input
+        type="text"
         placeholder="Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <input
-        placeholder="Password"
         type="password"
+        placeholder="Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
