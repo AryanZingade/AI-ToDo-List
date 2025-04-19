@@ -18,6 +18,7 @@ const Dashboard: React.FC = () => {
       }
 
       try {
+        console.log("Fetching tasks for the user...");
         const response = await fetch("http://localhost:8000/tasks/", {
           method: "GET",
           headers: {
@@ -27,6 +28,8 @@ const Dashboard: React.FC = () => {
         });
 
         const data = await response.json();
+
+        console.log("Response data:", data);
 
         if (!response.ok) {
           console.error("Error fetching tasks:", data);
@@ -40,6 +43,10 @@ const Dashboard: React.FC = () => {
           console.error("No username found.");
           return;
         }
+
+        data.forEach((task: { deadline: string }) => {
+          console.log("Task deadline:", task.deadline);
+        });
 
         const userTasks = data.filter(
           (task: { username: string }) => task.username === loggedInUsername

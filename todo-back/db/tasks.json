@@ -1,62 +1,11 @@
-{
-  "aryan": [
-    {
-      "id": 1,
-      "title": "Complete Homework",
-      "description": "Finish and submit homework assignment.",
-      "importance": "high",
-      "completed": true,
-      "username": "aryan"
-    },
-    {
-      "id": 2,
-      "title": "Buy Eggs",
-      "description": "Purchase eggs before the deadline.",
-      "importance": "high",
-      "completed": false,
-      "username": "aryan"
-    },
-    {
-      "id": 5,
-      "username": "aryan",
-      "title": "Pay Electricity Bill",
-      "description": "Pay the electricity bill by 18th April 2025.",
-      "importance": "low",
-      "completed": false
-    }
-  ],
-  "mrun": [
-    {
-      "id": 1,
-      "title": "Buy Eggs",
-      "description": "Purchase eggs by 20th April 2020.",
-      "importance": "low",
-      "completed": true,
-      "username": "mrun"
-    },
-    {
-      "id": 2,
-      "title": "Homework",
-      "description": "Complete the assigned homework tasks.",
-      "importance": "high",
-      "completed": false,
-      "username": "mrun"
-    },
-    {
-      "id": 3,
-      "title": "Listen to Music",
-      "description": "Take some time to listen to music.",
-      "importance": "low",
-      "completed": false,
-      "username": "mrun"
-    },
-    {
-      "id": 4,
-      "username": "mrun",
-      "title": "Buy Clothes",
-      "description": "Need to purchase new clothing items.",
-      "importance": "high",
-      "completed": false
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "username": "aryan",
+    "title": "Complete Homework",
+    "description": "Finish the assigned homework tasks.",
+    "importance": "high",
+    "deadline": "2023-10-06",
+    "completed": false
+  }
+]

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request, Depends
+from helper import get_current_user, create_jwt_token
 from auth import authenticate_user, create_user
 import task_service
 from dotenv import load_dotenv
@@ -6,8 +7,6 @@ import os
 import json
 from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
-from datetime import datetime, timedelta
-import jwt
 
 load_dotenv()
 
@@ -21,8 +20,6 @@ llm = AzureChatOpenAI(
 
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
-SECRET_KEY = "aryan101"
-
 @router.post("/signup")
 async def signup(request: Request):
     data = await request.json()
@@ -33,51 +30,25 @@ async def signup(request: Request):
         raise HTTPException(status_code=400, detail="Username and password are required")
 
     try:
-        # Attempt to create a new user
         create_user(username, password)
         token = create_jwt_token(username)
         return {"message": "Signup successful", "token": token}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
-    
-def get_current_user(request: Request):
-    token = request.headers.get("Authorization")
-    if not token:
-        raise HTTPException(status_code=403, detail="Token is missing")
-    
-    if token.startswith("Bearer "):
-        token = token.split(" ")[1]
-        
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return payload.get("sub")
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-def create_jwt_token(username: str):
-    expiration = datetime.utcnow() + timedelta(days=1)
-    payload = {"sub": username, "exp": expiration}
-    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
 @router.post("/login")
 async def login(request: Request):
     data = await request.json()
     username = data.get("username")
     password = data.get("password")
-    
+
     if authenticate_user(username, password):
         token = create_jwt_token(username)
         return {"message": "Login successful", "token": token}
     else:
         raise HTTPException(status_code=401, detail="Invalid username or password")
-
-@router.post("/")
-async def add_task(title: str, description: str = "", importance: str = "medium", username: str = Depends(get_current_user)):
-    return task_service.add_task(username, title, description, importance)
 
 @router.get("/")
 async def get_tasks(username: str = Depends(get_current_user)):
@@ -111,12 +82,12 @@ async def ai_create_task(request: Request):
 
         prompt = (
             "You are an assistant that extracts structured task information from a natural language query.\n"
-            "Return only a **valid JSON object** with exactly these three fields: 'title', 'description', and 'importance'.\n"
-            "Do not add explanations, text, or markdown formatting. Only return raw JSON.\n\n"
+            "Return only a valid JSON object with exactly these four fields: 'title', 'description', 'importance', and 'deadline'.\n"
+            "The 'deadline' must be in the format YYYY-MM-DD if mentioned, otherwise return null.\n"
+            "Do not include any explanations, markdown, or extra text. Only return raw JSON.\n\n"
             f"Query: {query}\n"
             "Output:"
         )
-
 
         response = llm.invoke([HumanMessage(content=prompt)])
         response_text = response.content.strip()
@@ -129,13 +100,14 @@ async def ai_create_task(request: Request):
         title = parsed.get("title")
         description = parsed.get("description", "")
         importance = parsed.get("importance", "medium")
+        deadline = parsed.get("deadline") or "No deadline"
 
         if not title:
             raise HTTPException(status_code=500, detail="Missing 'title' in LLM response.")
 
-        return task_service.add_task(username, title, description, importance)
+        return task_service.add_task(username, title, description, importance, deadline)
 
     except HTTPException as http_err:
         raise http_err
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
