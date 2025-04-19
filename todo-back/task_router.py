@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request, Depends
-from auth import authenticate_user
+from auth import authenticate_user, create_user
 import task_service
 from dotenv import load_dotenv
 import os
@@ -23,6 +23,25 @@ router = APIRouter(prefix="/tasks", tags=["Tasks"])
 
 SECRET_KEY = "aryan101"
 
+@router.post("/signup")
+async def signup(request: Request):
+    data = await request.json()
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        raise HTTPException(status_code=400, detail="Username and password are required")
+
+    try:
+        # Attempt to create a new user
+        create_user(username, password)
+        token = create_jwt_token(username)
+        return {"message": "Signup successful", "token": token}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal server error")
+    
 def get_current_user(request: Request):
     token = request.headers.get("Authorization")
     if not token:

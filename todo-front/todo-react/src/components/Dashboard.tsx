@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 const Dashboard: React.FC = () => {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -137,27 +140,34 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
-      <h2>Task Dashboard</h2>
-      <div className="ai-task-input">
-        <h3>Create Task Using AI</h3>
-        <textarea
+    <div className="dashboard p-4">
+      <h2 className="text-2xl font-semibold mb-4">Task Dashboard</h2>
+
+      <div className="ai-task-input mb-6">
+        <h3 className="text-xl mb-2">Create Task Using AI</h3>
+        <Textarea
           value={newTaskQuery}
           onChange={(e) => setNewTaskQuery(e.target.value)}
           placeholder="Enter task description (e.g., I need to complete homework by tomorrow night, and it is of high importance)"
+          className="w-full mb-4"
         />
-        <button onClick={handleAiCreateTask}>Create Task</button>
+        <Button onClick={handleAiCreateTask} className="w-full">
+          Create Task
+        </Button>
       </div>
 
       <div className="task-list">
-        <h3>All Tasks</h3>
+        <h3 className="text-xl mb-4">All Tasks</h3>
         {tasks.length === 0 ? (
           <p>No tasks available</p>
         ) : (
           tasks.map((task) => (
-            <div key={task.id} className="task-item">
+            <div
+              key={task.id}
+              className="task-item flex justify-between items-center bg-gray-100 p-4 rounded-md mb-2"
+            >
               <div className="task-details">
-                <h4>{task.title}</h4>
+                <h4 className="text-lg font-medium">{task.title}</h4>
                 <p>{task.description}</p>
                 <p>
                   <strong>Importance:</strong> {task.importance}
@@ -167,15 +177,22 @@ const Dashboard: React.FC = () => {
                   {task.completed ? "Completed" : "Pending"}
                 </p>
               </div>
-              <div className="task-actions">
+
+              <div className="task-actions flex space-x-2">
                 {!task.completed && (
-                  <button onClick={() => handleCompleteTask(task.id)}>
+                  <Button
+                    onClick={() => handleCompleteTask(task.id)}
+                    className="bg-green-500 text-white"
+                  >
                     Mark as Complete
-                  </button>
+                  </Button>
                 )}
-                <button onClick={() => handleDeleteTask(task.id)}>
+                <Button
+                  onClick={() => handleDeleteTask(task.id)}
+                  className="bg-red-500 text-white"
+                >
                   Delete Task
-                </button>
+                </Button>
               </div>
             </div>
           ))

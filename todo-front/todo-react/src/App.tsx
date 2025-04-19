@@ -10,7 +10,6 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="App">
-        <h1>Task Management</h1>
         <Routes>
           <Route path="/" element={<HomePage />} />{" "}
           <Route path="/login" element={<Login />} />
