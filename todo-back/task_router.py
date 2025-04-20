@@ -7,6 +7,7 @@ import os
 import json
 from langchain_openai import AzureChatOpenAI
 from langchain.schema import HumanMessage
+from datetime import datetime
 
 load_dotenv()
 
@@ -79,12 +80,15 @@ async def ai_create_task(request: Request):
             raise HTTPException(status_code=400, detail="Query is required")
         if not username:
             raise HTTPException(status_code=401, detail="Username is required")
+        
+        date_today = datetime.now().strftime("%Y-%m-%d")
 
         prompt = (
             "You are an assistant that extracts structured task information from a natural language query.\n"
             "Return only a valid JSON object with exactly these four fields: 'title', 'description', 'importance', and 'deadline'.\n"
-            "The 'deadline' must be in the format YYYY-MM-DD if mentioned, otherwise return null.\n"
+            "The 'deadline' must be in the format YYYY-MM-DD if mentioned, otherwise return null. Calculate the date\n"
             "Do not include any explanations, markdown, or extra text. Only return raw JSON.\n\n"
+            f"Your reference date is {date_today}, accordingly understand the days that are passed in the query.\n"
             f"Query: {query}\n"
             "Output:"
         )

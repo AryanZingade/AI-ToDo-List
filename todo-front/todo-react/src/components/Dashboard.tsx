@@ -19,13 +19,16 @@ const Dashboard: React.FC = () => {
 
       try {
         console.log("Fetching tasks for the user...");
-        const response = await fetch("http://localhost:8000/tasks/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/tasks/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -83,17 +86,20 @@ const Dashboard: React.FC = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/tasks/ai-create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          query: newTaskQuery,
-          username: loggedInUsername,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/tasks/ai-create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            query: newTaskQuery,
+            username: loggedInUsername,
+          }),
+        }
+      );
 
       if (res.ok) {
         const data = await res.json();
@@ -111,7 +117,7 @@ const Dashboard: React.FC = () => {
 
   const handleCompleteTask = async (taskId: number) => {
     const response = await fetch(
-      `http://localhost:8000/tasks/${taskId}/complete`,
+      `${process.env.REACT_APP_API_URL}/tasks/${taskId}/complete`,
       {
         method: "PUT",
         headers: {
@@ -132,12 +138,15 @@ const Dashboard: React.FC = () => {
   };
 
   const handleDeleteTask = async (taskId: number) => {
-    const response = await fetch(`http://localhost:8000/tasks/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/tasks/${taskId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
 
     if (response.ok) {
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
@@ -178,6 +187,9 @@ const Dashboard: React.FC = () => {
                 <p>{task.description}</p>
                 <p>
                   <strong>Importance:</strong> {task.importance}
+                </p>
+                <p>
+                  <strong>Deadline:</strong> {task.deadline}
                 </p>
                 <p>
                   <strong>Status:</strong>{" "}
