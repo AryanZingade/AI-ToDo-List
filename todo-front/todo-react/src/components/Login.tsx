@@ -17,19 +17,16 @@ const Login: React.FC = () => {
 
   const handleLogin = async () => {
     console.log("Sending login with:", username, password);
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/tasks/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:8000/tasks/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
 
     if (response.ok) {
       const data = await response.json();

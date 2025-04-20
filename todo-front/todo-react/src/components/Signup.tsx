@@ -18,14 +18,11 @@ const Signup: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/tasks/signup`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      }
-    );
+    const response = await fetch("http://localhost:8000/tasks/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
     if (response.ok) {
       alert("Account created successfully!");
