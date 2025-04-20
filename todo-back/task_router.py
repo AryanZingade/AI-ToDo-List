@@ -32,8 +32,7 @@ async def signup(request: Request):
 
     try:
         create_user(username, password)
-        token = create_jwt_token(username)
-        return {"message": "Signup successful", "token": token}
+        return {"message": "Signup successful"}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception:
