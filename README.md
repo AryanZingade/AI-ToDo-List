@@ -12,11 +12,14 @@ Supports **user signup, login (with JWT)**, and basic **task management** (add, 
 
 ### For Unix/macOS
 python3 -m venv venv
+
 source venv/bin/activate
 
 ### For Windows
 python -m venv venv
+
 venv\Scripts\activate
+
 
 pip install -r requirements.txt
 
