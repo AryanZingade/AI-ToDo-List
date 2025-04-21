@@ -29,8 +29,11 @@ uvicorn main:app --reload
 # Running Frontend:
 
 cd todo-front
+
 cd todo-react
+
 npm install
+
 npm run dev
 
 Will be running on: http://localhost:5173
